@@ -1,6 +1,7 @@
 <script>
     import { alertError } from "$lib/alert";
-    import { getWallet, getRecentTransactions, getProducts } from "$lib/api/WalletApi";
+    import { getWallet, getRecentTransactions } from "$lib/api/WalletApi";
+    import { getProducts } from "$lib/api/ProductApi";
     import { onMount } from "svelte";
 
     const userData = JSON.parse(localStorage.getItem('userData'));
