@@ -1,8 +1,9 @@
 <script>
-    import { alertError } from "$lib/alert";
+    import { alertError, alertSuccess } from "$lib/alert";
     import { getWallet, getRecentTransactions } from "$lib/api/WalletApi";
     import { getProducts } from "$lib/api/ProductApi";
     import { onMount } from "svelte";
+    import Swal from "sweetalert2";
 
     const userData = JSON.parse(localStorage.getItem('userData'));
 
@@ -32,6 +33,7 @@
 
     let products = $state([]);
     let loading = $state(true);
+    let selectedProduct = $state(null);
 
     async function fetchBalance() {
         try {
@@ -64,6 +66,47 @@
             await alertError(error.message);
         }
     }
+
+    async function handleBuyProduct(product) {
+        selectedProduct = product;
+        
+        // Show purchase confirmation dialog
+        const { value: confirmed } = await Swal.fire({
+            title: 'Confirm Purchase',
+            html: `
+                <div class="text-left">
+                    <div class="mb-4 pb-4 border-b border-gray-300">
+                        <p class="text-sm text-gray-600 mb-2"><strong>Account Name:</strong></p>
+                        <p class="text-lg font-semibold text-gray-800">${userData.name || 'N/A'}</p>
+                    </div>
+                    <div class="mb-4 pb-4 border-b border-gray-300">
+                        <p class="text-sm text-gray-600 mb-2"><strong>Package:</strong></p>
+                        <p class="text-lg font-semibold text-gray-800">${product.name}</p>
+                        <p class="text-sm text-gray-600 mt-1">${product.description}</p>
+                    </div>
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600 mb-2"><strong>Total Purchase:</strong></p>
+                        <p class="text-2xl font-bold text-blue-600">${formatCurrency(product.price)}</p>
+                    </div>
+                </div>
+            `,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#1e3a8a',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Confirm Purchase',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true
+        });
+
+        if (confirmed) {
+            // Process the purchase
+            await alertSuccess(`Purchase of ${product.name} confirmed! Processing...`);
+            // You can add actual API call here
+            selectedProduct = null;
+        }
+    }
+
     function formatCurrency(amount) {
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
@@ -315,7 +358,9 @@
                                     <span class="text-2xl font-bold text-blue-400">
                                         {formatCurrency(product.price)}
                                     </span>
-                                    <button class="bg-gradient rounded-lg py-2 px-4 text-white text-sm font-semibold hover:opacity-90 transition-all duration-200 shadow-md transform group-hover:scale-105">
+                                    <button 
+                                        onclick={() => handleBuyProduct(product)}
+                                        class="bg-gradient rounded-lg py-2 px-4 text-white text-sm font-semibold hover:opacity-90 transition-all duration-200 shadow-md transform group-hover:scale-105 cursor-pointer">
                                         <i class="fas fa-cart-plus mr-1"></i> Buy
                                     </button>
                                 </div>
