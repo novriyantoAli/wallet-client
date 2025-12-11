@@ -43,7 +43,7 @@
             if (response.status === 200) {
                 wallet = responseBody;
             } else {
-                await alertError(responseBody.error || "Failed to fetch balance");
+                throw new Error(responseBody.error || "Failed to fetch balance");
             }
         } catch (error) {
             await alertError(error.message);
@@ -58,79 +58,10 @@
             if (response.status === 200) {
                 products = responseBody.data || [];
             } else {
-                // Set demo products if API fails
-                products = [
-                    {
-                        id: 1,
-                        name: "Premium Membership",
-                        description: "Get access to all premium features",
-                        price: 99.99,
-                        icon: "fa-crown",
-                        color: "from-yellow-400 to-yellow-600"
-                    },
-                    {
-                        id: 2,
-                        name: "Advanced Analytics",
-                        description: "Detailed insights and reports",
-                        price: 49.99,
-                        icon: "fa-chart-line",
-                        color: "from-blue-400 to-blue-600"
-                    },
-                    {
-                        id: 3,
-                        name: "24/7 Support",
-                        description: "Priority customer support",
-                        price: 29.99,
-                        icon: "fa-headset",
-                        color: "from-green-400 to-green-600"
-                    },
-                    {
-                        id: 4,
-                        name: "Export Reports",
-                        description: "Download and export all reports",
-                        price: 19.99,
-                        icon: "fa-download",
-                        color: "from-purple-400 to-purple-600"
-                    },
-                ];
+                throw new Error(responseBody.error || "Failed to fetch products");
             }
         } catch (error) {
-            console.log("Products unavailable, using demo data");
-            // Set demo products for demo
-            products = [
-                {
-                    id: 1,
-                    name: "Premium Membership",
-                    description: "Get access to all premium features",
-                    price: 99.99,
-                    icon: "fa-crown",
-                    color: "from-yellow-400 to-yellow-600"
-                },
-                {
-                    id: 2,
-                    name: "Advanced Analytics",
-                    description: "Detailed insights and reports",
-                    price: 49.99,
-                    icon: "fa-chart-line",
-                    color: "from-blue-400 to-blue-600"
-                },
-                {
-                    id: 3,
-                    name: "24/7 Support",
-                    description: "Priority customer support",
-                    price: 29.99,
-                    icon: "fa-headset",
-                    color: "from-green-400 to-green-600"
-                },
-                {
-                    id: 4,
-                    name: "Export Reports",
-                    description: "Download and export all reports",
-                    price: 19.99,
-                    icon: "fa-download",
-                    color: "from-purple-400 to-purple-600"
-                },
-            ];
+            await alertError(error.message);
         }
     }
     function formatCurrency(amount) {
@@ -178,9 +109,19 @@
 
 <div class="space-y-8">
     <!-- Header -->
-    <div class="flex items-center mb-8">
-        <i class="fas fa-chart-pie text-blue-400 text-2xl mr-3"></i>
-        <h1 class="text-3xl font-bold text-white">Dashboard</h1>
+    <div class="flex items-center justify-between mb-8">
+        <div class="flex items-center">
+            <i class="fas fa-chart-pie text-blue-400 text-2xl mr-3"></i>
+            <h1 class="text-3xl font-bold text-white">Dashboard</h1>
+        </div>
+        <div class="flex gap-4">
+            <button class="bg-gradient rounded-lg py-3 px-6 text-white font-semibold hover:opacity-90 transition-all duration-200 flex items-center justify-center card-hover shadow-lg transform hover:-translate-y-0.5">
+                <i class="fas fa-plus mr-2"></i> Topup
+            </button>
+            <button class="bg-red-600 rounded-lg py-3 px-6 text-white font-semibold hover:bg-red-700 transition-all duration-200 flex items-center justify-center card-hover shadow-lg transform hover:-translate-y-0.5">
+                <i class="fas fa-minus mr-2"></i> Record Expense
+            </button>
+        </div>
     </div>
 
     <!-- Balance Card -->
@@ -389,15 +330,5 @@
                 </div>
             {/if}
         </div>
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <button class="bg-gradient rounded-lg py-4 px-6 text-white font-semibold hover:opacity-90 transition-all duration-200 flex items-center justify-center card-hover shadow-lg transform hover:-translate-y-0.5">
-            <i class="fas fa-plus mr-2"></i> Add Income
-        </button>
-        <button class="bg-red-600 rounded-lg py-4 px-6 text-white font-semibold hover:bg-red-700 transition-all duration-200 flex items-center justify-center card-hover shadow-lg transform hover:-translate-y-0.5">
-            <i class="fas fa-minus mr-2"></i> Record Expense
-        </button>
     </div>
 </div>
