@@ -20,6 +20,16 @@ export const userLogin = async ({email, password}) => {
     });
 }
 
+export const userGetLevelUsers = async (token) => {
+    return fetch(`${import.meta.env.VITE_URL_API}/users?level=user`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+    })
+}
 export const userDetail = async (token) => {
     return fetch(`${import.meta.env.VITE_URL_API}/auth/me`, {
         method: 'GET',

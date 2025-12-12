@@ -5,16 +5,16 @@
     import { onMount } from "svelte";
 
     async function handleLogout() {
-        const userData = JSON.parse(localStorage.getItem('userData'));
+        const token = localStorage.getItem('token');
 
-        if (userData) {
-            const response = await userLogout(userData.token);
+        if (token) {
+            const response = await userLogout(token);
             const responseBody = await response.json();
 
             console.log(responseBody);
 
             if (response.status === 200) {
-                localStorage.removeItem('userData');
+                localStorage.removeItem('token');
             } else {
                 await alertError(responseBody.error);
             }

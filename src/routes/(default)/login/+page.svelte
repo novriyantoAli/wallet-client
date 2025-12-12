@@ -21,16 +21,15 @@
             if (response.status === 200) {
                 const userData = responseBody.data;
 
-                console.log('userData: ', userData );
-                // Store user data in localStorage
-                localStorage.setItem('userData', JSON.stringify(userData));
+                localStorage.setItem('token', userData.token);
+                localStorage.setItem('user', JSON.stringify(userData));
                 
                 await goto('/dashboard')
             } else {
-                await alertError(responseBody.error)
+                throw new Error(responseBody.error);
             }
         } catch (error) {
-            await alertError(msg);
+            await alertError(error.message);
         }
     }
 </script>

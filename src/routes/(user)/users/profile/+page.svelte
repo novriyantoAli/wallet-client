@@ -3,7 +3,8 @@
     import { userDetail, userUpdateName, userUpdatePassword } from "$lib/api/UserApi";
     import { onMount } from "svelte";
 
-    const userData = JSON.parse(localStorage.getItem('userData'));
+    const token = localStorage.getItem('token');
+    const userSession = JSON.parse(localStorage.getItem('user'));
 
     const user = $state({
         name: '',
@@ -19,7 +20,7 @@
         e.preventDefault();
 
         try {
-            const response = await userUpdateName(userData.token, userData.id, user);
+            const response = await userUpdateName(token, userSession.id, user);
             const responseBody = await response.json();
 
             console.log(responseBody);
@@ -43,7 +44,7 @@
         }
 
         try {
-            const response = await userUpdatePassword(userData.token, userData.id, password)
+            const response = await userUpdatePassword(token, userSession.id, password)
             const responseBody = await response.json();
 
             console.log(responseBody);
@@ -64,7 +65,7 @@
 
     async function fetchUser() {
         try {
-            const response = await userDetail(userData.token);
+            const response = await userDetail(token, userSession.id);
             const responseBody = await response.json();
             
             if (response.status === 200) {

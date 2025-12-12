@@ -1,8 +1,31 @@
 <script>
 	import favicon from '$lib/assets/favicon.svg';
+    import { onMount } from 'svelte';
 	import '../app.css';
+    import { userDetail } from '$lib/api/UserApi';
 
 	let { children } = $props();
+
+	onMount( async () => {
+		const token = localStorage.getItem('token');
+		const user = JSON.parse(localStorage.getItem('user'));
+		if (!token || !user) {
+			return;
+		}
+
+		try {
+			const response = await userDetail(token);
+			const responseBody = await response.json();
+
+			if (response.status !== 200) {
+				localStorage.removeItem('token');
+				localStorage.removeItem('user');
+			} 
+		} catch (error) {
+			localStorage.removeItem('token');
+			localStorage.removeItem('user');
+		}
+	})
 </script>
 
 <svelte:head>
