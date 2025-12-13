@@ -15,7 +15,6 @@
 
 		try {
 			const response = await userDetail(token);
-			const responseBody = await response.json();
 
 			if (response.status !== 200) {
 				localStorage.removeItem('token');
