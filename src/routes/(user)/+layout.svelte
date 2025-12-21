@@ -7,7 +7,7 @@
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user'));
     if (!token || !user) {
-        goto('/login');
+        throw goto('/glogin');
     }
 
     const isClient = user?.level?.toLowerCase() === 'reseller' || user?.level?.toLowerCase() === 'admin';

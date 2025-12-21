@@ -3,6 +3,7 @@
     import { onMount } from 'svelte';
 	import '../app.css';
     import { userDetail } from '$lib/api/UserApi';
+	import { authMe } from '$lib/api/AuthApi';
 
 	let { children } = $props();
 
@@ -14,7 +15,8 @@
 		}
 
 		try {
-			const response = await userDetail(token);
+			// const response = await userDetail(token);
+			const response = await authMe(token);
 
 			if (response.status !== 200) {
 				localStorage.removeItem('token');

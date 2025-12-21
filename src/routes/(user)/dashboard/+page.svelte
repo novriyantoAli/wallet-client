@@ -323,6 +323,98 @@
         </div>
     </div>
 
+    <!-- Layanan Utama Section -->
+    <div class="bg-gray-800 bg-opacity-80 rounded-xl shadow-custom border border-gray-700 overflow-hidden card-hover animate-fade-in">
+        <div class="p-4 sm:p-6">
+            <h2 class="text-lg sm:text-xl font-semibold text-white mb-6 flex items-center gap-2 sm:gap-3">
+                <i class="fas fa-th text-blue-400 text-base sm:text-lg"></i>
+                LAYANAN UTAMA
+            </h2>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+                <!-- Pulsa -->
+                <button class="group bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg p-4 hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-200 transform hover:scale-105">
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center group-hover:bg-opacity-30 transition-all">
+                            <i class="fas fa-mobile-alt text-white text-2xl"></i>
+                        </div>
+                        <span class="text-white text-xs sm:text-sm font-semibold text-center">Pulsa</span>
+                    </div>
+                </button>
+
+                <!-- Paket Data -->
+                <button class="group bg-gradient-to-br from-purple-600 to-purple-800 rounded-lg p-4 hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-200 transform hover:scale-105">
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center group-hover:bg-opacity-30 transition-all">
+                            <i class="fas fa-wifi text-white text-2xl"></i>
+                        </div>
+                        <span class="text-white text-xs sm:text-sm font-semibold text-center">Paket Data</span>
+                    </div>
+                </button>
+
+                <!-- PLN Token -->
+                <button class="group bg-gradient-to-br from-yellow-600 to-yellow-800 rounded-lg p-4 hover:shadow-lg hover:shadow-yellow-500/50 transition-all duration-200 transform hover:scale-105">
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center group-hover:bg-opacity-30 transition-all">
+                            <i class="fas fa-lightbulb text-white text-2xl"></i>
+                        </div>
+                        <span class="text-white text-xs sm:text-sm font-semibold text-center">PLN Token</span>
+                    </div>
+                </button>
+
+                <!-- Voucher -->
+                <button class="group bg-gradient-to-br from-pink-600 to-pink-800 rounded-lg p-4 hover:shadow-lg hover:shadow-pink-500/50 transition-all duration-200 transform hover:scale-105">
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center group-hover:bg-opacity-30 transition-all">
+                            <i class="fas fa-gift text-white text-2xl"></i>
+                        </div>
+                        <span class="text-white text-xs sm:text-sm font-semibold text-center">Voucher</span>
+                    </div>
+                </button>
+
+                <!-- Games -->
+                <button class="group bg-gradient-to-br from-green-600 to-green-800 rounded-lg p-4 hover:shadow-lg hover:shadow-green-500/50 transition-all duration-200 transform hover:scale-105">
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center group-hover:bg-opacity-30 transition-all">
+                            <i class="fas fa-gamepad text-white text-2xl"></i>
+                        </div>
+                        <span class="text-white text-xs sm:text-sm font-semibold text-center">Games</span>
+                    </div>
+                </button>
+
+                <!-- E-Money -->
+                <button class="group bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-lg p-4 hover:shadow-lg hover:shadow-indigo-500/50 transition-all duration-200 transform hover:scale-105">
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center group-hover:bg-opacity-30 transition-all">
+                            <i class="fas fa-wallet text-white text-2xl"></i>
+                        </div>
+                        <span class="text-white text-xs sm:text-sm font-semibold text-center">E-Money</span>
+                    </div>
+                </button>
+
+                <!-- PDAM -->
+                <button class="group bg-gradient-to-br from-cyan-600 to-cyan-800 rounded-lg p-4 hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-200 transform hover:scale-105">
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center group-hover:bg-opacity-30 transition-all">
+                            <i class="fas fa-droplet text-white text-2xl"></i>
+                        </div>
+                        <span class="text-white text-xs sm:text-sm font-semibold text-center">PDAM</span>
+                    </div>
+                </button>
+
+                <!-- BPJS -->
+                <button class="group bg-gradient-to-br from-red-600 to-red-800 rounded-lg p-4 hover:shadow-lg hover:shadow-red-500/50 transition-all duration-200 transform hover:scale-105">
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center group-hover:bg-opacity-30 transition-all">
+                            <i class="fas fa-shield-alt text-white text-2xl"></i>
+                        </div>
+                        <span class="text-white text-xs sm:text-sm font-semibold text-center">BPJS</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Products Section -->
     <div class="bg-gray-800 bg-opacity-80 rounded-xl shadow-custom border border-gray-700 overflow-hidden card-hover animate-fade-in">
         <div class="p-4 sm:p-6">
