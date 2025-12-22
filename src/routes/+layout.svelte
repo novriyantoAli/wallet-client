@@ -15,7 +15,6 @@
 		}
 
 		try {
-			// const response = await userDetail(token);
 			const response = await authMe(token);
 
 			if (response.status !== 200) {

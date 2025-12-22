@@ -1,5 +1,5 @@
 export const getWallet = async (token, id) => {
-    return fetch(`${import.meta.env.VITE_URL_API}/users/${id}/wallet`, {
+    return fetch(`${import.meta.env.VITE_URL_API}/wallets/by-user/${id}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

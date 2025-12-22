@@ -1,9 +1,11 @@
 <script>
     import { alertError, alertSuccess } from "$lib/alert";
-    import { getWallet, getRecentTransactions } from "$lib/api/WalletApi";
+    import { getWallet } from "$lib/api/WalletApi";
+    import { getRecentTransactions } from "$lib/api/TransactionApi";
     import { getProducts } from "$lib/api/ProductApi";
     import { purchaseProduct } from "$lib/api/PurchaseApi";
     import { onMount } from "svelte";
+    import { goto } from "$app/navigation";
     import Swal from "sweetalert2";
 
     const token = localStorage.getItem('token');
@@ -41,11 +43,11 @@
         try {
             const response = await getWallet(token, user.id);
             const responseBody = await response.json();
-
-            // console.log(responseBody);
+            
+            console.log('fetch balance:', responseBody.data);
             
             if (response.status === 200) {
-                wallet = responseBody;
+                wallet = responseBody.data;
             } else {
                 throw new Error(responseBody.error || "Failed to fetch balance");
             }
@@ -332,156 +334,17 @@
             </h2>
 
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-                <!-- Pulsa -->
-                <button class="group bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg p-4 hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-200 transform hover:scale-105">
-                    <div class="flex flex-col items-center gap-3">
-                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center group-hover:bg-opacity-30 transition-all">
-                            <i class="fas fa-mobile-alt text-white text-2xl"></i>
-                        </div>
-                        <span class="text-white text-xs sm:text-sm font-semibold text-center">Pulsa</span>
-                    </div>
-                </button>
-
-                <!-- Paket Data -->
-                <button class="group bg-gradient-to-br from-purple-600 to-purple-800 rounded-lg p-4 hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-200 transform hover:scale-105">
+                <!-- Voucher WiFi -->
+                <button onclick={() => goto('/purchase-wifi')} class="group bg-gradient-to-br from-purple-600 to-purple-800 rounded-lg p-4 hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-200 transform hover:scale-105">
                     <div class="flex flex-col items-center gap-3">
                         <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center group-hover:bg-opacity-30 transition-all">
                             <i class="fas fa-wifi text-white text-2xl"></i>
                         </div>
-                        <span class="text-white text-xs sm:text-sm font-semibold text-center">Paket Data</span>
-                    </div>
-                </button>
-
-                <!-- PLN Token -->
-                <button class="group bg-gradient-to-br from-yellow-600 to-yellow-800 rounded-lg p-4 hover:shadow-lg hover:shadow-yellow-500/50 transition-all duration-200 transform hover:scale-105">
-                    <div class="flex flex-col items-center gap-3">
-                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center group-hover:bg-opacity-30 transition-all">
-                            <i class="fas fa-lightbulb text-white text-2xl"></i>
-                        </div>
-                        <span class="text-white text-xs sm:text-sm font-semibold text-center">PLN Token</span>
-                    </div>
-                </button>
-
-                <!-- Voucher -->
-                <button class="group bg-gradient-to-br from-pink-600 to-pink-800 rounded-lg p-4 hover:shadow-lg hover:shadow-pink-500/50 transition-all duration-200 transform hover:scale-105">
-                    <div class="flex flex-col items-center gap-3">
-                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center group-hover:bg-opacity-30 transition-all">
-                            <i class="fas fa-gift text-white text-2xl"></i>
-                        </div>
-                        <span class="text-white text-xs sm:text-sm font-semibold text-center">Voucher</span>
-                    </div>
-                </button>
-
-                <!-- Games -->
-                <button class="group bg-gradient-to-br from-green-600 to-green-800 rounded-lg p-4 hover:shadow-lg hover:shadow-green-500/50 transition-all duration-200 transform hover:scale-105">
-                    <div class="flex flex-col items-center gap-3">
-                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center group-hover:bg-opacity-30 transition-all">
-                            <i class="fas fa-gamepad text-white text-2xl"></i>
-                        </div>
-                        <span class="text-white text-xs sm:text-sm font-semibold text-center">Games</span>
-                    </div>
-                </button>
-
-                <!-- E-Money -->
-                <button class="group bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-lg p-4 hover:shadow-lg hover:shadow-indigo-500/50 transition-all duration-200 transform hover:scale-105">
-                    <div class="flex flex-col items-center gap-3">
-                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center group-hover:bg-opacity-30 transition-all">
-                            <i class="fas fa-wallet text-white text-2xl"></i>
-                        </div>
-                        <span class="text-white text-xs sm:text-sm font-semibold text-center">E-Money</span>
-                    </div>
-                </button>
-
-                <!-- PDAM -->
-                <button class="group bg-gradient-to-br from-cyan-600 to-cyan-800 rounded-lg p-4 hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-200 transform hover:scale-105">
-                    <div class="flex flex-col items-center gap-3">
-                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center group-hover:bg-opacity-30 transition-all">
-                            <i class="fas fa-droplet text-white text-2xl"></i>
-                        </div>
-                        <span class="text-white text-xs sm:text-sm font-semibold text-center">PDAM</span>
-                    </div>
-                </button>
-
-                <!-- BPJS -->
-                <button class="group bg-gradient-to-br from-red-600 to-red-800 rounded-lg p-4 hover:shadow-lg hover:shadow-red-500/50 transition-all duration-200 transform hover:scale-105">
-                    <div class="flex flex-col items-center gap-3">
-                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center group-hover:bg-opacity-30 transition-all">
-                            <i class="fas fa-shield-alt text-white text-2xl"></i>
-                        </div>
-                        <span class="text-white text-xs sm:text-sm font-semibold text-center">BPJS</span>
+                        <span class="text-white text-xs sm:text-sm font-semibold text-center">Voucher WiFi</span>
                     </div>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Products Section -->
-    <div class="bg-gray-800 bg-opacity-80 rounded-xl shadow-custom border border-gray-700 overflow-hidden card-hover animate-fade-in">
-        <div class="p-4 sm:p-6">
-            <div class="flex items-center justify-between mb-6 sm:mb-8">
-                <h2 class="text-lg sm:text-2xl font-semibold text-white flex items-center gap-2 sm:gap-3">
-                    <i class="fas fa-shopping-bag text-blue-400 text-base sm:text-xl"></i>
-                    Featured Products
-                </h2>
-                <button onclick={fetchProducts}
-                        title="Refresh products"
-                        class="text-gray-400 hover:text-white transition-colors duration-200 text-sm sm:text-base">
-                    <i class="fas fa-sync-alt text-sm"></i>
-                </button>
-            </div>
-
-            {#if products.length === 0}
-                <div class="text-center py-12">
-                    <i class="fas fa-box-open text-gray-500 text-4xl mb-4"></i>
-                    <p class="text-gray-400 text-sm">No products available</p>
-                </div>
-            {:else}
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
-                    {#each products as product (product.id)}
-                        <div class="group relative bg-gradient-to-br from-gray-700 to-gray-800 rounded-lg overflow-hidden card-hover transform hover:-translate-y-2 transition-all duration-300 border border-gray-600 hover:border-blue-500">
-                            <!-- Gradient Background -->
-                            <div class="absolute inset-0 bg-gradient-to-br {product.color || 'from-blue-400 to-blue-600'} opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
-                            
-                            <!-- Product Content -->
-                            <div class="relative p-4 sm:p-6 h-full flex flex-col">
-                                <!-- Icon -->
-                                <div class="mb-3 sm:mb-4">
-                                    <div class="w-12 sm:w-14 h-12 sm:h-14 bg-gradient-to-br {product.color || 'from-blue-400 to-blue-600'} rounded-lg flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-300">
-                                        <i class="fas {product.icon || 'fa-box'} text-white text-lg sm:text-xl"></i>
-                                    </div>
-                                </div>
-
-                                <!-- Title -->
-                                <h3 class="text-base sm:text-lg font-bold text-white mb-1 sm:mb-2 group-hover:text-blue-300 transition-colors duration-200 line-clamp-2">
-                                    {product.name}
-                                </h3>
-
-                                <!-- Description -->
-                                <p class="text-gray-300 text-xs sm:text-sm mb-3 sm:mb-4 flex-grow line-clamp-2">
-                                    {product.description}
-                                </p>
-
-                                <!-- Price -->
-                                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 pt-3 sm:pt-4 border-t border-gray-600">
-                                    <span class="text-lg sm:text-2xl font-bold text-blue-400">
-                                        {formatCurrency(product.price)}
-                                    </span>
-                                    <button 
-                                        onclick={() => handleBuyProduct(product)}
-                                        class="bg-gradient rounded-lg py-2 px-3 sm:py-2 sm:px-4 text-white text-xs sm:text-sm font-semibold hover:opacity-90 transition-all duration-200 shadow-md transform group-hover:scale-105 cursor-pointer whitespace-nowrap">
-                                        <i class="fas fa-cart-plus mr-1"></i> <span class="hidden sm:inline">Buy</span><span class="sm:hidden">Buy</span>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Hover Glow Effect -->
-                            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                                <div class="absolute inset-0 bg-gradient-to-br {product.color || 'from-blue-400 to-blue-600'} opacity-10 blur-xl"></div>
-                            </div>
-                        </div>
-                    {/each}
-                </div>
-            {/if}
-        </div>
-    </div>
 </div>
