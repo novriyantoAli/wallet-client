@@ -4,6 +4,7 @@
     import { alertError, alertSuccess } from "$lib/alert";
     import { getProviders } from "$lib/api/ProviderApi";
     import { productWiFiFilter } from "$lib/api/ProductApi";
+    import { purchaseProductWifi } from '$lib/api/PurchaseApi';
 
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user'));
@@ -17,6 +18,7 @@
     let showPinModal = $state(false);
     let pinInput = $state('');
     let pinError = $state('');
+    let errorMessage = $state('');
 
     onMount(async () => {
         await fetchProviders();
@@ -25,6 +27,7 @@
     async function fetchProviders() {
         try {
             loading = true;
+            errorMessage = '';
             const response = await getProviders(token);
             const responseBody = await response.json();
 
@@ -36,6 +39,7 @@
                 throw new Error(responseBody.error || "Failed to fetch providers");
             }
         } catch (error) {
+            errorMessage = error.message;
             await alertError(error.message);
             providers = [];
         } finally {
@@ -46,6 +50,7 @@
     async function fetchPackages(providerId) {
         try {
             loadingPackages = true;
+            errorMessage = '';
             packages = [];
             const response = await productWiFiFilter(token, providerId);
             const responseBody = await response.json();
@@ -58,6 +63,7 @@
                 throw new Error(responseBody.error || "Failed to fetch packages");
             }
         } catch (error) {
+            errorMessage = error.message;
             await alertError(error.message);
             packages = [];
         } finally {
@@ -113,11 +119,18 @@
             //     pin: pinInput
             // });
 
-            await alertSuccess(`Pembelian ${selectedPackage.name} dari ${selectedProvider.name} berhasil!`);
-            showPinModal = false;
-            await goto('/dashboard');
+            const response = await purchaseProductWifi(token, pinInput, selectedPackage.id);
+            const responseBody = await response.json();
+
+            if (response.status !== 200) {
+                throw new Error(responseBody.error || 'Gagal melakukan pembelian');
+            } else {
+                await alertSuccess(`Pembelian ${selectedPackage.name} dari ${selectedProvider.name} berhasil!`);
+            }
         } catch (error) {
-            pinError = error.message || 'Terjadi kesalahan saat memproses pembelian';
+            errorMessage = error.message;
+        } finally {
+            closePinModal();
         }
     }
 
@@ -161,6 +174,26 @@
 
     <!-- Main Content -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <!-- Error Message Alert -->
+        {#if errorMessage}
+            <div class="bg-red-500 bg-opacity-20 border border-red-500 rounded-lg p-4 sm:p-6 mb-6 animate-fade-in">
+                <div class="flex items-start gap-3 sm:gap-4">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-exclamation-circle text-red-400 text-xl sm:text-2xl mt-0.5"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-red-400 font-semibold text-sm sm:text-base mb-1">Error</h3>
+                        <p class="text-red-300 text-xs sm:text-sm">{errorMessage}</p>
+                    </div>
+                    <button
+                        onclick={() => errorMessage = ''}
+                        class="text-red-400 hover:text-red-300 transition-colors duration-200 flex-shrink-0">
+                        <i class="fas fa-times text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        {/if}
+
         <!-- Select Provider Section -->
         <div class="bg-gray-800 bg-opacity-80 rounded-xl shadow-custom border border-gray-700 overflow-hidden card-hover animate-fade-in mb-6">
             <div class="p-4 sm:p-6">
@@ -308,7 +341,7 @@
                 </div>
 
                 <!-- Content - Scrollable -->
-                <div class="p-6 sm:p-8 overflow-y-auto flex-1">s
+                <div class="p-6 sm:p-8 overflow-y-auto flex-1">
                     <!-- PIN Display -->
                     <div class="flex justify-center gap-3 mb-6 sm:mb-8">
                         {#each Array(6) as _, i}

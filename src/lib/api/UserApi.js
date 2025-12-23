@@ -65,6 +65,17 @@ export const userUpdatePassword = async (token, id, {current_password, new_passw
     });
 }
 
+export const userSecurityCheck = async (token, userId) => {
+    return await fetch(`${import.meta.env.VITE_URL_API}/user-security?user_id=${userId}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+    });
+}
+
 export const userLogout = async (token) => {
     return await fetch(`${import.meta.env.VITE_URL_API}/auth/logout`, {
         method: 'DELETE',
@@ -73,5 +84,32 @@ export const userLogout = async (token) => {
             'Accept': 'application/json',
             'Authorization': `Bearer ${token}`,
         },
+    });
+}
+
+export const userSetupPin = async (token, userId, {pin}) => {
+    return await fetch(`${import.meta.env.VITE_URL_API}/user-security/pin`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+            user_id: parseInt(userId, 10), 
+            pin: pin
+        }),
+    });
+}
+
+export const userUpdatePin = async (token, userId, {current_pin, new_pin}) => {
+    return await fetch(`${import.meta.env.VITE_URL_API}/users/${userId}/pin`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({current_pin, new_pin}),
     });
 }

@@ -61,6 +61,13 @@
                         </a>
                     </li>
                     <li>
+                        <a href="/users/setup-pin"
+                           class="text-gray-100 hover:text-white flex items-center transition-colors duration-200">
+                            <i class="fas fa-shield-alt mr-2"></i>
+                            <span>Security PIN</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="/users/logout"
                            class="text-gray-100 hover:text-white flex items-center transition-colors duration-200">
                             <i class="fas fa-sign-out-alt mr-2"></i>
@@ -122,6 +129,11 @@
                class="flex-1 flex flex-col items-center py-3 text-gray-100 hover:text-white transition-colors duration-200">
                 <i class="fas fa-user-circle text-xl mb-1"></i>
                 <span class="text-xs">Profile</span>
+            </a>
+            <a href="/users/setup-pin"
+               class="flex-1 flex flex-col items-center py-3 text-gray-100 hover:text-white transition-colors duration-200">
+                <i class="fas fa-shield-alt text-xl mb-1"></i>
+                <span class="text-xs">Security PIN</span>
             </a>
             <a href="/users/logout"
                class="flex-1 flex flex-col items-center py-3 text-gray-100 hover:text-white transition-colors duration-200">

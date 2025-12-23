@@ -2,11 +2,8 @@
     import { alertError, alertSuccess } from "$lib/alert";
     import { getWallet } from "$lib/api/WalletApi";
     import { getRecentTransactions } from "$lib/api/TransactionApi";
-    import { getProducts } from "$lib/api/ProductApi";
-    import { purchaseProduct } from "$lib/api/PurchaseApi";
     import { onMount } from "svelte";
     import { goto } from "$app/navigation";
-    import Swal from "sweetalert2";
 
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user'));
@@ -35,9 +32,7 @@
         return transactions;
     });
 
-    let products = $state([]);
     let loading = $state(true);
-    let selectedProduct = $state(null);
 
     async function fetchBalance() {
         try {
@@ -53,83 +48,6 @@
             }
         } catch (error) {
             await alertError(error.message);
-        }
-    }
-
-    async function fetchProducts() {
-        try {
-            const response = await getProducts(token);
-            const responseBody = await response.json();
-
-            if (response.status === 200) {
-                products = responseBody.data || [];
-            } else {
-                throw new Error(responseBody.error || "Failed to fetch products");
-            }
-        } catch (error) {
-            await alertError(error.message);
-        }
-    }
-
-    async function handleBuyProduct(product) {
-        selectedProduct = product;
-        
-        // Show purchase confirmation dialog
-        const { value: confirmed } = await Swal.fire({
-            title: 'Confirm Purchase',
-            html: `
-                <div class="text-left max-w-sm mx-auto px-2 sm:px-4">
-                    <div class="mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-gray-300">
-                        <p class="text-xs sm:text-sm text-gray-600 mb-1 sm:mb-2"><strong>Account Name:</strong></p>
-                        <p class="text-base sm:text-lg font-semibold text-gray-800 break-words">${user.name || 'N/A'}</p>
-                    </div>
-                    <div class="mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-gray-300">
-                        <p class="text-xs sm:text-sm text-gray-600 mb-1 sm:mb-2"><strong>Package:</strong></p>
-                        <p class="text-base sm:text-lg font-semibold text-gray-800 break-words">${product.name}</p>
-                        <p class="text-xs sm:text-sm text-gray-600 mt-1 break-words">${product.description}</p>
-                    </div>
-                    <div class="mb-2 sm:mb-4">
-                        <p class="text-xs sm:text-sm text-gray-600 mb-1 sm:mb-2"><strong>Total Purchase:</strong></p>
-                        <p class="text-xl sm:text-2xl font-bold text-blue-600">${formatCurrency(product.price)}</p>
-                    </div>
-                </div>
-            `,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#1e3a8a',
-            cancelButtonColor: '#6b7280',
-            confirmButtonText: 'Confirm Purchase',
-            cancelButtonText: 'Cancel',
-            reverseButtons: true,
-            didOpen: (modal) => {
-                // Make modal responsive on mobile
-                const htmlElement = modal.querySelector('.swal2-html-container');
-                if (htmlElement) {
-                    htmlElement.style.maxWidth = '100%';
-                    htmlElement.style.overflow = 'visible';
-                }
-                modal.style.maxWidth = '90vw';
-            }
-        });
-
-        if (confirmed) {
-            try {
-                // Process the purchase
-                const response = await purchaseProduct(token, user.id, product.id, 1);
-                const responseBody = await response.json();
-
-                if (response.status === 200 || response.status === 201) {
-                    await alertSuccess(`Purchase of ${product.name} successful!`);
-                    // Refresh balance and transactions after purchase
-                    await fetchBalance();
-                    selectedProduct = null;
-                } else {
-                    throw new Error(responseBody.error || "Purchase failed");
-                }
-            } catch (error) {
-                await alertError(error.message);
-                selectedProduct = null;
-            }
         }
     }
 
@@ -171,7 +89,6 @@
 
     onMount(async () => {
         await fetchBalance();
-        await fetchProducts();
         loading = false;
     })
 </script>
@@ -206,66 +123,24 @@
         </div>
     </div>
 
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
-        <!-- Total Income -->
-        <div class="bg-gray-800 bg-opacity-80 rounded-xl shadow-custom border border-gray-700 overflow-hidden card-hover animate-fade-in">
-            <div class="p-4 sm:p-6">
-                <div class="flex items-center justify-between mb-3 sm:mb-4">
-                    <h3 class="text-gray-300 text-xs sm:text-sm font-medium">Total Income</h3>
-                    <div class="w-8 sm:w-10 h-8 sm:h-10 bg-green-500 bg-opacity-20 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-arrow-down text-green-400 text-xs sm:text-sm"></i>
+        <!-- Layanan Utama Section -->
+    <div class="bg-gray-800 bg-opacity-80 rounded-xl shadow-custom border border-gray-700 overflow-hidden card-hover animate-fade-in">
+        <div class="p-4 sm:p-6">
+            <h2 class="text-lg sm:text-xl font-semibold text-white mb-6 flex items-center gap-2 sm:gap-3">
+                <i class="fas fa-th text-blue-400 text-base sm:text-lg"></i>
+                LAYANAN UTAMA
+            </h2>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+                <!-- Voucher WiFi -->
+                <button onclick={() => goto('/purchase-wifi')} class="group bg-gradient-to-br from-purple-600 to-purple-800 rounded-lg p-4 hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-200 transform hover:scale-105">
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center group-hover:bg-opacity-30 transition-all">
+                            <i class="fas fa-wifi text-white text-2xl"></i>
+                        </div>
+                        <span class="text-white text-xs sm:text-sm font-semibold text-center">Voucher WiFi</span>
                     </div>
-                </div>
-                    {#await trxData then trxs}
-                    <p class="text-xl sm:text-2xl font-bold text-white">
-                        {
-                            formatCurrency(
-                                trxs.filter(t => t.type?.toLowerCase() === 'topup' || t.type?.toLowerCase() === 'deposit').reduce((sum, t) => sum + parseFloat(t.amount || 0), 0)
-                            )
-                        }
-                    </p>
-                    {/await}
-
-            </div>
-        </div>
-
-        <!-- Total Expenses -->
-        <div class="bg-gray-800 bg-opacity-80 rounded-xl shadow-custom border border-gray-700 overflow-hidden card-hover animate-fade-in">
-            <div class="p-4 sm:p-6">
-                <div class="flex items-center justify-between mb-3 sm:mb-4">
-                    <h3 class="text-gray-300 text-xs sm:text-sm font-medium">Total Expenses</h3>
-                    <div class="w-8 sm:w-10 h-8 sm:h-10 bg-red-500 bg-opacity-20 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-arrow-up text-red-400 text-xs sm:text-sm"></i>
-                    </div>
-                </div>
-                <p class="text-xl sm:text-2xl font-bold text-white">
-                    {#await trxData then trxs}
-                        {formatCurrency(
-                        trxs
-                            .filter(t => t.type?.toLowerCase() !== 'topup' && t.type?.toLowerCase() !== 'deposit')
-                            .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0)
-                    )}                        
-                    {/await}
-
-                </p>
-            </div>
-        </div>
-
-        <!-- Total Transactions -->
-        <div class="bg-gray-800 bg-opacity-80 rounded-xl shadow-custom border border-gray-700 overflow-hidden card-hover animate-fade-in">
-            <div class="p-4 sm:p-6">
-                <div class="flex items-center justify-between mb-3 sm:mb-4">
-                    <h3 class="text-gray-300 text-xs sm:text-sm font-medium">Total Transactions</h3>
-                    <div class="w-8 sm:w-10 h-8 sm:h-10 bg-blue-500 bg-opacity-20 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-exchange-alt text-blue-400 text-xs sm:text-sm"></i>
-                    </div>
-                </div>
-                <p class="text-xl sm:text-2xl font-bold text-white">
-                    {#await trxData then trxs}
-                        {trxs.length}
-                    {/await}
-                </p>
+                </button>
             </div>
         </div>
     </div>
@@ -325,26 +200,6 @@
         </div>
     </div>
 
-    <!-- Layanan Utama Section -->
-    <div class="bg-gray-800 bg-opacity-80 rounded-xl shadow-custom border border-gray-700 overflow-hidden card-hover animate-fade-in">
-        <div class="p-4 sm:p-6">
-            <h2 class="text-lg sm:text-xl font-semibold text-white mb-6 flex items-center gap-2 sm:gap-3">
-                <i class="fas fa-th text-blue-400 text-base sm:text-lg"></i>
-                LAYANAN UTAMA
-            </h2>
 
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-                <!-- Voucher WiFi -->
-                <button onclick={() => goto('/purchase-wifi')} class="group bg-gradient-to-br from-purple-600 to-purple-800 rounded-lg p-4 hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-200 transform hover:scale-105">
-                    <div class="flex flex-col items-center gap-3">
-                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center group-hover:bg-opacity-30 transition-all">
-                            <i class="fas fa-wifi text-white text-2xl"></i>
-                        </div>
-                        <span class="text-white text-xs sm:text-sm font-semibold text-center">Voucher WiFi</span>
-                    </div>
-                </button>
-            </div>
-        </div>
-    </div>
 
 </div>
