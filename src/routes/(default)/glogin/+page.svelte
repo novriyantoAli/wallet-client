@@ -19,9 +19,8 @@
         } else if (error) {
             // Authentication failed
             alertError(decodeURIComponent(error));
-            // Remove error from URL
-            window.history.replaceState({}, document.title, window.location.pathname);
         }
+        window.history.replaceState({}, document.title, window.location.pathname);
     });
 
     async function handleAuthSuccess(code, state) {

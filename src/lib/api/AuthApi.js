@@ -24,6 +24,17 @@ export const authAction = async ({provider, code, state}) => {
     });
 }
 
+export const authSignOut = async (token) => {
+    return await fetch(`${import.meta.env.VITE_URL_API}/oauth/deauthenticate`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+    });
+} 
+
 export const authMe = async (token) => {
     return fetch(`${import.meta.env.VITE_URL_API}/oauth/me`, {
         method: 'GET',
